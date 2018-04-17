@@ -1,0 +1,13 @@
+version: "3"
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jnesspro/mpp-reader
+    container_name: mpp-reader
+    environment:
+      APP_UPLOADPATH: "/var/upload"
+    volumes:
+      - ./dev/upload:/var/upload
