@@ -50,6 +50,8 @@ public class Utils {
                 .setName(task.getName())
                 .setID(task.getID())
                 .setUniqueID(task.getUniqueID())
+                .setTaskMode(task.getTaskMode())
+                .setDuration(Utils.duration(task.getDuration()))
 
                 .setActive(task.getActive())
                 .setActualCost(Utils.bd(task.getActualCost()))
@@ -72,7 +74,6 @@ public class Utils {
                 .setFinishText(task.getFinishText())
                 .setFinishSlack(Utils.duration(task.getFinishSlack()))
                 .setFinishVariance(Utils.duration(task.getFinishVariance()))
-                .setDuration(Utils.duration(task.getDuration()))
 
                 .createTask();
 
