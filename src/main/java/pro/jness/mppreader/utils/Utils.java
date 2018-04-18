@@ -1,7 +1,11 @@
 package pro.jness.mppreader.utils;
 
+import net.sf.mpxj.CustomField;
+import net.sf.mpxj.CustomFieldContainer;
 import net.sf.mpxj.Relation;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import pro.jness.mppreader.utils.mpp.Task;
 import pro.jness.mppreader.utils.mpp.TaskBuilder;
 
@@ -46,10 +50,15 @@ public class Utils {
     }
 
     public static Task task(net.sf.mpxj.Task task) {
+        return task(task, null);
+    }
+
+    public static Task task(net.sf.mpxj.Task task, CustomFieldContainer customFields) {
         Task result = new TaskBuilder()
                 .setName(task.getName())
                 .setID(task.getID())
                 .setUniqueID(task.getUniqueID())
+                .setType(task.getType())
                 .setTaskMode(task.getTaskMode())
                 .setDuration(Utils.duration(task.getDuration()))
 
@@ -82,6 +91,38 @@ public class Utils {
 
             for (Relation relation : task.getPredecessors()) {
                 result.getPredecessors().add(Utils.predecessor(relation));
+            }
+        }
+
+        if (customFields != null) {
+            List<Task.CustomField> cfs = new ArrayList<>(customFields.size());
+            result.setCustomFields(cfs);
+            for (CustomField customField : customFields) {
+                Task.CustomField cf = new Task.CustomField();
+                cf.setAlias(customField.getAlias());
+
+                String numStr = customField.getFieldType().getName().replaceAll("[a-zA-Z]", "");
+                int number = NumberUtils.toInt(numStr);
+                if (number > 0) {
+                    switch (customField.getFieldType().getDataType()) {
+                        case STRING:
+                            String stringValue = StringUtils.trimToNull(task.getText(number));
+                            if (stringValue != null) {
+                                cf.setStringValue(stringValue);
+                                cfs.add(cf);
+                            }
+                            break;
+                        case NUMERIC:
+                        case INTEGER:
+                        case SHORT:
+                            BigDecimal bd = Utils.bd(task.getNumber(number));
+                            if (bd != null) {
+                                cf.setDecimalValue(bd);
+                                cfs.add(cf);
+                            }
+                            break;
+                    }
+                }
             }
         }
 

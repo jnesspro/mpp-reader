@@ -88,7 +88,7 @@ public class MPPController {
                 mpp.setTasks(new ArrayList<>(mppProject.getTasks().size()));
 
                 for (Task task : mppProject.getTasks()) {
-                    mpp.getTasks().add(Utils.task(task));
+                    mpp.getTasks().add(Utils.task(task, mppProject.getCustomFields()));
                 }
             }
         }

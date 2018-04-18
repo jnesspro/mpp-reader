@@ -10,7 +10,6 @@ import java.util.UUID;
 public class TaskBuilder {
     private Integer id;
     private boolean active;
-    private List<Task.ResourceAssignment> resourceAssignments;
     private Double percentageComplete;
     private Double percentageWorkComplete;
     private BigDecimal actualCost;
@@ -77,7 +76,6 @@ public class TaskBuilder {
     private String subProjectName;
     private boolean summary;
     private BigDecimal earnedValueScheduleVariance;
-    private String text;
     private String outlineCode;
     private Task.Duration totalSlack;
     private Integer uniqueID;
@@ -155,11 +153,6 @@ public class TaskBuilder {
 
     public TaskBuilder setActive(boolean active) {
         this.active = active;
-        return this;
-    }
-
-    public TaskBuilder setResourceAssignments(List<Task.ResourceAssignment> resourceAssignments) {
-        this.resourceAssignments = resourceAssignments;
         return this;
     }
 
@@ -490,11 +483,6 @@ public class TaskBuilder {
 
     public TaskBuilder setEarnedValueScheduleVariance(BigDecimal earnedValueScheduleVariance) {
         this.earnedValueScheduleVariance = earnedValueScheduleVariance;
-        return this;
-    }
-
-    public TaskBuilder setText(String text) {
-        this.text = text;
         return this;
     }
 
@@ -844,6 +832,6 @@ public class TaskBuilder {
     }
 
     public Task createTask() {
-        return new Task(id, active, resourceAssignments, percentageComplete, percentageWorkComplete, actualCost, actualDuration, actualFinish, actualStart, actualWork, baselineCost, baselineDuration, baselineDurationText, baselineFinish, baselineFinishText, baselineStart, baselineStartText, baselineWork, budgetedCostOfWorkPerformed, budgetedCostOfWorkScheduled, confirmed, constraintDate, constraintType, contact, cost, costVariance, createDate, critical, earnedValueCostVariance, levelingDelay, duration, durationText, durationVariance, earlyFinish, earlyStart, finish, finishText, finishVariance, fixedCost, freeSlack, hideBar, lateFinish, lateStart, linkedFields, marked, milestone, name, notes, objects, outlineLevel, outlineNumber, predecessors, priority, project, remainingCost, remainingDuration, remainingWork, resourceGroup, resourceInitials, resourceNames, resume, rollup, start, startText, startVariance, stop, subProjectName, summary, earnedValueScheduleVariance, text, outlineCode, totalSlack, uniqueID, updateNeeded, workBreakdownStructureCode, work, workVariance, parentTaskID, childTasks, estimated, deadline, type, nullTask, wbsLevel, resumeValid, recurring, overAllocated, subProjectTaskID, subProjectTaskUniqueID, subProjectTasksUniqueIDOffset, subProjectReadOnly, externalTask, externalTaskProject, acwp, levelingDelayFormat, ignoreResourceCalendar, physicalPercentComplete, earnedValueMethod, actualWorkProtected, actualOvertimeWorkProtected, regularWork, effortDriven, date, overtimeCost, actualOvertimeCost, actualOvertimeWork, fixedCostAccrual, hyperlink, hyperlinkAddress, hyperlinkSubAddress, levelAssignments, levelingCanSplit, overtimeWork, preleveledStart, preleveledFinish, remainingOvertimeWork, remainingOvertimeCost, calendar, expanded, startSlack, finishSlack, splits, splitCompleteDuration, subProject, enterpriseCost, enterpriseDate, enterpriseDuration, enterpriseFlag, enterpriseNumber, enterpriseText, summaryProgress, completeThrough, guid, taskMode, baselineEstimatedDuration, baselineEstimatedStart, baselineEstimatedFinish, baselineFixedCost, baselineFixedCostAccrual);
+        return new Task(id, active, percentageComplete, percentageWorkComplete, actualCost, actualDuration, actualFinish, actualStart, actualWork, baselineCost, baselineDuration, baselineDurationText, baselineFinish, baselineFinishText, baselineStart, baselineStartText, baselineWork, budgetedCostOfWorkPerformed, budgetedCostOfWorkScheduled, confirmed, constraintDate, constraintType, contact, cost, costVariance, createDate, critical, earnedValueCostVariance, levelingDelay, duration, durationText, durationVariance, earlyFinish, earlyStart, finish, finishText, finishVariance, fixedCost, freeSlack, hideBar, lateFinish, lateStart, linkedFields, marked, milestone, name, notes, objects, outlineLevel, outlineNumber, predecessors, priority, project, remainingCost, remainingDuration, remainingWork, resourceGroup, resourceInitials, resourceNames, resume, rollup, start, startText, startVariance, stop, subProjectName, summary, earnedValueScheduleVariance, outlineCode, totalSlack, uniqueID, updateNeeded, workBreakdownStructureCode, work, workVariance, parentTaskID, childTasks, estimated, deadline, type, nullTask, wbsLevel, resumeValid, recurring, overAllocated, subProjectTaskID, subProjectTaskUniqueID, subProjectTasksUniqueIDOffset, subProjectReadOnly, externalTask, externalTaskProject, acwp, levelingDelayFormat, ignoreResourceCalendar, physicalPercentComplete, earnedValueMethod, actualWorkProtected, actualOvertimeWorkProtected, regularWork, effortDriven, date, overtimeCost, actualOvertimeCost, actualOvertimeWork, fixedCostAccrual, hyperlink, hyperlinkAddress, hyperlinkSubAddress, levelAssignments, levelingCanSplit, overtimeWork, preleveledStart, preleveledFinish, remainingOvertimeWork, remainingOvertimeCost, calendar, expanded, startSlack, finishSlack, splits, splitCompleteDuration, subProject, enterpriseCost, enterpriseDate, enterpriseDuration, enterpriseFlag, enterpriseNumber, enterpriseText, summaryProgress, completeThrough, guid, taskMode, baselineEstimatedDuration, baselineEstimatedStart, baselineEstimatedFinish, baselineFixedCost, baselineFixedCostAccrual);
     }
 }

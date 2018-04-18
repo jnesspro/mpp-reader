@@ -13,7 +13,6 @@ import java.util.UUID;
 public class Task {
     private Integer ID;
     private boolean active;
-    private List<ResourceAssignment> resourceAssignments;
     private Double percentageComplete;
     private Double percentageWorkComplete;
     private BigDecimal actualCost;
@@ -94,7 +93,6 @@ public class Task {
     private String subProjectName;
     private boolean summary;
     private BigDecimal earnedValueScheduleVariance;
-    private String text;
     private String outlineCode;
     private Duration totalSlack;
     private Integer uniqueID;
@@ -173,14 +171,14 @@ public class Task {
     private Duration baselineEstimatedFinish;
     private BigDecimal baselineFixedCost;
     private AccrueType baselineFixedCostAccrual;
+    private List<CustomField> customFields;
 
     public Task() {
     }
 
-    public Task(Integer ID, boolean active, List<ResourceAssignment> resourceAssignments, Double percentageComplete, Double percentageWorkComplete, BigDecimal actualCost, Duration actualDuration, LocalDateTime actualFinish, LocalDateTime actualStart, Duration actualWork, BigDecimal baselineCost, Duration baselineDuration, String baselineDurationText, LocalDateTime baselineFinish, String baselineFinishText, LocalDateTime baselineStart, String baselineStartText, Duration baselineWork, Double budgetedCostOfWorkPerformed, Double budgetedCostOfWorkScheduled, boolean confirmed, LocalDateTime constraintDate, ConstraintType constraintType, String contact, BigDecimal cost, BigDecimal costVariance, LocalDateTime createDate, boolean critical, BigDecimal earnedValueCostVariance, Duration levelingDelay, Duration duration, String durationText, Duration durationVariance, LocalDateTime earlyFinish, LocalDateTime earlyStart, LocalDateTime finish, String finishText, Duration finishVariance, BigDecimal fixedCost, Duration freeSlack, boolean hideBar, LocalDateTime lateFinish, LocalDateTime lateStart, boolean linkedFields, boolean marked, boolean milestone, String name, String notes, Integer objects, Integer outlineLevel, Integer outlineNumber, List<Predecessor> predecessors, Priority priority, String project, BigDecimal remainingCost, Duration remainingDuration, Duration remainingWork, String resourceGroup, String resourceInitials, String resourceNames, LocalDateTime resume, boolean rollup, LocalDateTime start, String startText, Duration startVariance, LocalDateTime stop, String subProjectName, boolean summary, BigDecimal earnedValueScheduleVariance, String text, String outlineCode, Duration totalSlack, Integer uniqueID, boolean updateNeeded, String workBreakdownStructureCode, Duration work, Duration workVariance, Integer parentTaskID, List<Task> childTasks, boolean estimated, LocalDateTime deadline, TaskType type, boolean nullTask, String wbsLevel, boolean resumeValid, boolean recurring, boolean overAllocated, Integer subProjectTaskID, Integer subProjectTaskUniqueID, Integer subProjectTasksUniqueIDOffset, boolean subProjectReadOnly, boolean externalTask, String externalTaskProject, BigDecimal acwp, TimeUnit levelingDelayFormat, boolean ignoreResourceCalendar, BigDecimal physicalPercentComplete, EarnedValueMethod earnedValueMethod, Duration actualWorkProtected, Duration actualOvertimeWorkProtected, Duration regularWork, boolean effortDriven, boolean date, BigDecimal overtimeCost, BigDecimal actualOvertimeCost, Duration actualOvertimeWork, AccrueType fixedCostAccrual, String hyperlink, String hyperlinkAddress, String hyperlinkSubAddress, boolean levelAssignments, boolean levelingCanSplit, Duration overtimeWork, LocalDateTime preleveledStart, LocalDateTime preleveledFinish, Duration remainingOvertimeWork, BigDecimal remainingOvertimeCost, ProjectCalendar calendar, boolean expanded, Duration startSlack, Duration finishSlack, List<DateRange> splits, LocalDateTime splitCompleteDuration, SubProject subProject, BigDecimal enterpriseCost, LocalDateTime enterpriseDate, Duration enterpriseDuration, boolean enterpriseFlag, Double enterpriseNumber, String enterpriseText, LocalDateTime summaryProgress, LocalDateTime completeThrough, UUID guid, TaskMode taskMode, Duration baselineEstimatedDuration, Duration baselineEstimatedStart, Duration baselineEstimatedFinish, BigDecimal baselineFixedCost, AccrueType baselineFixedCostAccrual) {
+    public Task(Integer ID, boolean active, Double percentageComplete, Double percentageWorkComplete, BigDecimal actualCost, Duration actualDuration, LocalDateTime actualFinish, LocalDateTime actualStart, Duration actualWork, BigDecimal baselineCost, Duration baselineDuration, String baselineDurationText, LocalDateTime baselineFinish, String baselineFinishText, LocalDateTime baselineStart, String baselineStartText, Duration baselineWork, Double budgetedCostOfWorkPerformed, Double budgetedCostOfWorkScheduled, boolean confirmed, LocalDateTime constraintDate, ConstraintType constraintType, String contact, BigDecimal cost, BigDecimal costVariance, LocalDateTime createDate, boolean critical, BigDecimal earnedValueCostVariance, Duration levelingDelay, Duration duration, String durationText, Duration durationVariance, LocalDateTime earlyFinish, LocalDateTime earlyStart, LocalDateTime finish, String finishText, Duration finishVariance, BigDecimal fixedCost, Duration freeSlack, boolean hideBar, LocalDateTime lateFinish, LocalDateTime lateStart, boolean linkedFields, boolean marked, boolean milestone, String name, String notes, Integer objects, Integer outlineLevel, Integer outlineNumber, List<Predecessor> predecessors, Priority priority, String project, BigDecimal remainingCost, Duration remainingDuration, Duration remainingWork, String resourceGroup, String resourceInitials, String resourceNames, LocalDateTime resume, boolean rollup, LocalDateTime start, String startText, Duration startVariance, LocalDateTime stop, String subProjectName, boolean summary, BigDecimal earnedValueScheduleVariance, String outlineCode, Duration totalSlack, Integer uniqueID, boolean updateNeeded, String workBreakdownStructureCode, Duration work, Duration workVariance, Integer parentTaskID, List<Task> childTasks, boolean estimated, LocalDateTime deadline, TaskType type, boolean nullTask, String wbsLevel, boolean resumeValid, boolean recurring, boolean overAllocated, Integer subProjectTaskID, Integer subProjectTaskUniqueID, Integer subProjectTasksUniqueIDOffset, boolean subProjectReadOnly, boolean externalTask, String externalTaskProject, BigDecimal acwp, TimeUnit levelingDelayFormat, boolean ignoreResourceCalendar, BigDecimal physicalPercentComplete, EarnedValueMethod earnedValueMethod, Duration actualWorkProtected, Duration actualOvertimeWorkProtected, Duration regularWork, boolean effortDriven, boolean date, BigDecimal overtimeCost, BigDecimal actualOvertimeCost, Duration actualOvertimeWork, AccrueType fixedCostAccrual, String hyperlink, String hyperlinkAddress, String hyperlinkSubAddress, boolean levelAssignments, boolean levelingCanSplit, Duration overtimeWork, LocalDateTime preleveledStart, LocalDateTime preleveledFinish, Duration remainingOvertimeWork, BigDecimal remainingOvertimeCost, ProjectCalendar calendar, boolean expanded, Duration startSlack, Duration finishSlack, List<DateRange> splits, LocalDateTime splitCompleteDuration, SubProject subProject, BigDecimal enterpriseCost, LocalDateTime enterpriseDate, Duration enterpriseDuration, boolean enterpriseFlag, Double enterpriseNumber, String enterpriseText, LocalDateTime summaryProgress, LocalDateTime completeThrough, UUID guid, TaskMode taskMode, Duration baselineEstimatedDuration, Duration baselineEstimatedStart, Duration baselineEstimatedFinish, BigDecimal baselineFixedCost, AccrueType baselineFixedCostAccrual) {
         this.ID = ID;
         this.active = active;
-        this.resourceAssignments = resourceAssignments;
         this.percentageComplete = percentageComplete;
         this.percentageWorkComplete = percentageWorkComplete;
         this.actualCost = actualCost;
@@ -247,7 +245,6 @@ public class Task {
         this.subProjectName = subProjectName;
         this.summary = summary;
         this.earnedValueScheduleVariance = earnedValueScheduleVariance;
-        this.text = text;
         this.outlineCode = outlineCode;
         this.totalSlack = totalSlack;
         this.uniqueID = uniqueID;
@@ -319,7 +316,7 @@ public class Task {
         this.baselineFixedCostAccrual = baselineFixedCostAccrual;
     }
 
-    public static class SubProject{
+    public static class SubProject {
         private String dosFileName;
         private String dosFullPath;
         private String fileName;
@@ -403,7 +400,7 @@ public class Task {
         }
     }
 
-    public static class DateRange{
+    public static class DateRange {
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         private LocalDateTime start;
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -452,18 +449,6 @@ public class Task {
 
         public void setWorkWeeks(List<ProjectCalendarWeek> workWeeks) {
             this.workWeeks = workWeeks;
-        }
-    }
-
-    public static class ResourceAssignment {
-        private Integer uniqueID;
-
-        public Integer getUniqueID() {
-            return uniqueID;
-        }
-
-        public void setUniqueID(Integer uniqueID) {
-            this.uniqueID = uniqueID;
         }
     }
 
@@ -526,6 +511,64 @@ public class Task {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class CustomField {
+        private String alias;
+        private Boolean booleanValue;
+        private String stringValue;
+        private LocalDateTime dateValue;
+        private Integer intValue;
+        private BigDecimal decimalValue;
+
+        public Boolean getBooleanValue() {
+            return booleanValue;
+        }
+
+        public void setBooleanValue(Boolean booleanValue) {
+            this.booleanValue = booleanValue;
+        }
+
+        public LocalDateTime getDateValue() {
+            return dateValue;
+        }
+
+        public void setDateValue(LocalDateTime dateValue) {
+            this.dateValue = dateValue;
+        }
+
+        public String getAlias() {
+            return alias;
+        }
+
+        public void setAlias(String alias) {
+            this.alias = alias;
+        }
+
+        public String getStringValue() {
+            return stringValue;
+        }
+
+        public void setStringValue(String stringValue) {
+            this.stringValue = stringValue;
+        }
+
+        public Integer getIntValue() {
+            return intValue;
+        }
+
+        public void setIntValue(Integer intValue) {
+            this.intValue = intValue;
+        }
+
+        public BigDecimal getDecimalValue() {
+            return decimalValue;
+        }
+
+        public void setDecimalValue(BigDecimal decimalValue) {
+            this.decimalValue = decimalValue;
+        }
+    }
+
     public Integer getID() {
         return ID;
     }
@@ -540,14 +583,6 @@ public class Task {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public List<ResourceAssignment> getResourceAssignments() {
-        return resourceAssignments;
-    }
-
-    public void setResourceAssignments(List<ResourceAssignment> resourceAssignments) {
-        this.resourceAssignments = resourceAssignments;
     }
 
     public Double getPercentageComplete() {
@@ -1076,14 +1111,6 @@ public class Task {
 
     public void setEarnedValueScheduleVariance(BigDecimal earnedValueScheduleVariance) {
         this.earnedValueScheduleVariance = earnedValueScheduleVariance;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     public String getOutlineCode() {
@@ -1636,5 +1663,13 @@ public class Task {
 
     public void setBaselineFixedCostAccrual(AccrueType baselineFixedCostAccrual) {
         this.baselineFixedCostAccrual = baselineFixedCostAccrual;
+    }
+
+    public List<CustomField> getCustomFields() {
+        return customFields;
+    }
+
+    public void setCustomFields(List<CustomField> customFields) {
+        this.customFields = customFields;
     }
 }
