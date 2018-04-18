@@ -1,8 +1,13 @@
 package pro.jness.mppreader.controller;
 
-import net.sf.mpxj.*;
+import net.sf.mpxj.MPXJException;
+import net.sf.mpxj.ProjectFile;
+import net.sf.mpxj.ProjectProperties;
+import net.sf.mpxj.Task;
 import net.sf.mpxj.mpp.MPPReader;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,99 +15,96 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import pro.jness.mppreader.storage.StorageService;
-import pro.jness.mppreader.utils.MPP;
+import pro.jness.mppreader.utils.Utils;
+import pro.jness.mppreader.utils.mpp.MPP;
 
-import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class MPPController {
 
     private final Logger logger = LoggerFactory.getLogger(MPPController.class);
-    private final StorageService storageService;
     private final MPPReader mppReader;
 
     @Autowired
-    public MPPController(StorageService storageService, MPPReader mppReader) {
-        this.storageService = storageService;
+    public MPPController(MPPReader mppReader) {
         this.mppReader = mppReader;
     }
 
     @PostMapping("/describe-mpp-now")
-    public MPP describeMppNow(@RequestParam("file") MultipartFile file) {
-        Path savedFile = storageService.storeMPP(file);
-        try {
-            ProjectFile mppProject = mppReader.read(savedFile.toFile());
-            MPP mpp = new MPP();
+    public MPP describeMppNow(@RequestParam("file") MultipartFile file,
+                              @RequestParam(required = false, defaultValue = "true") Boolean includeProjectProperties,
+                              @RequestParam(required = false, defaultValue = "true") Boolean includeTasks,
+                              @RequestParam(required = false, defaultValue = "true") Boolean includeTasksHierarchy) {
+        ProjectFile mppProject;
+        try (InputStream fileIS = file.getInputStream()) {
+            mppProject = mppReader.read(fileIS);
+        } catch (IOException | MPXJException e) {
+            logger.error(e.getMessage(), e);
+            throw new RuntimeException("Can not read this file: \n" + ExceptionUtils.getStackTrace(e));
+        }
+
+        MPP mpp = new MPP();
+        mpp.setTasksTotal(CollectionUtils.size(mppProject.getTasks()));
+
+        if (includeProjectProperties) {
             ProjectProperties projectProperties = mppProject.getProjectProperties();
-            if (projectProperties != null) {
-                mpp.setProjectProperties(new MPP.ProjectProperties());
 
-                mpp.getProjectProperties().setName(projectProperties.getName());
-                mpp.getProjectProperties().setShortApplicationName(projectProperties.getShortApplicationName());
-                mpp.getProjectProperties().setFullApplicationName(projectProperties.getFullApplicationName());
-                mpp.getProjectProperties().setApplicationVersion(projectProperties.getApplicationVersion());
-                mpp.getProjectProperties().setAuthor(projectProperties.getAuthor());
-                mpp.getProjectProperties().setLastAuthor(projectProperties.getLastAuthor());
-                mpp.getProjectProperties().setCompany(projectProperties.getCompany());
-                mpp.getProjectProperties().setComments(projectProperties.getComments());
-                mpp.getProjectProperties().setProjectTitle(projectProperties.getProjectTitle());
-                mpp.getProjectProperties().setCurrencyCode(projectProperties.getCurrencyCode());
-                mpp.getProjectProperties().setCurrencySymbol(projectProperties.getCurrencySymbol());
-                mpp.getProjectProperties().setDefaultCalendarName(projectProperties.getDefaultCalendarName());
-                mpp.getProjectProperties().setMpxProgramName(projectProperties.getMpxProgramName());
-                mpp.getProjectProperties().setAmText(projectProperties.getAMText());
-                mpp.getProjectProperties().setPmText(projectProperties.getPMText());
-                mpp.getProjectProperties().setCategory(projectProperties.getCategory());
+            MPP.ProjectProperties pp = new MPP.ProjectProperties();
+            mpp.setProjectProperties(pp);
 
-                if (projectProperties.getStartDate() != null) {
-                    mpp.getProjectProperties().setStartDate(
-                            LocalDateTime.ofInstant(projectProperties.getStartDate().toInstant(), ZoneOffset.UTC));
-                }
+            pp.setName(projectProperties.getName());
+            pp.setShortApplicationName(projectProperties.getShortApplicationName());
+            pp.setFullApplicationName(projectProperties.getFullApplicationName());
+            pp.setApplicationVersion(projectProperties.getApplicationVersion());
+            pp.setAuthor(projectProperties.getAuthor());
+            pp.setLastAuthor(projectProperties.getLastAuthor());
+            pp.setCompany(projectProperties.getCompany());
+            pp.setComments(projectProperties.getComments());
+            pp.setProjectTitle(projectProperties.getProjectTitle());
+            pp.setCurrencyCode(projectProperties.getCurrencyCode());
+            pp.setCurrencySymbol(projectProperties.getCurrencySymbol());
+            pp.setDefaultCalendarName(projectProperties.getDefaultCalendarName());
+            pp.setMpxProgramName(projectProperties.getMpxProgramName());
+            pp.setAmText(projectProperties.getAMText());
+            pp.setPmText(projectProperties.getPMText());
+            pp.setCategory(projectProperties.getCategory());
 
-                if (projectProperties.getFinishDate() != null) {
-                    mpp.getProjectProperties().setFinishDate(
-                            LocalDateTime.ofInstant(projectProperties.getFinishDate().toInstant(), ZoneOffset.UTC));
-                }
+            if (projectProperties.getStartDate() != null) {
+                pp.setStartDate(Utils.date(projectProperties.getStartDate()));
             }
 
+            if (projectProperties.getFinishDate() != null) {
+                pp.setFinishDate(Utils.date(projectProperties.getFinishDate()));
+            }
+        }
+
+        if (BooleanUtils.isTrue(includeTasks)) {
             if (CollectionUtils.isNotEmpty(mppProject.getTasks())) {
                 mpp.setTasks(new ArrayList<>(mppProject.getTasks().size()));
 
                 for (Task task : mppProject.getTasks()) {
-                    MPP.Task t = new MPP.Task();
-                    t.setDuration(new MPP.Task.Duration(
-                            task.getDuration().getUnits(), task.getDuration().getDuration()));
-                    if (CollectionUtils.isNotEmpty(task.getPredecessors())) {
-                        t.setPredecessors(new ArrayList<>(task.getPredecessors().size()));
-
-                        for (Relation relation : task.getPredecessors()) {
-                            MPP.Task.Predecessor p = new MPP.Task.Predecessor();
-                            p.setRelationType(relation.getType());
-                            if (relation.getTargetTask() != null) {
-                                p.setTargetTaskID(relation.getTargetTask().getID());
-                            }
-                            if (relation.getSourceTask() != null) {
-                                p.setSourceTaskID(relation.getSourceTask().getID());
-                            }
-
-                            t.getPredecessors().add(p);
-                        }
-                    }
-
-                    mpp.getTasks().add(t);
+                    mpp.getTasks().add(Utils.task(task));
                 }
             }
-
-            return mpp;
-        } catch (MPXJException e) {
-            logger.error(e.getMessage(), e);
-            throw new RuntimeException("Can not read this file");
         }
+
+        if (BooleanUtils.isTrue(includeTasksHierarchy)) {
+            List<Task> highLevelTasks = mppProject.getTasks().stream().filter(t -> t.getParentTask() == null).collect(Collectors.toList());
+
+            mpp.setTasksHierarchy(new ArrayList<>(highLevelTasks.size()));
+
+            if (CollectionUtils.isNotEmpty(highLevelTasks)) {
+                for (Task task : highLevelTasks) {
+                    mpp.getTasksHierarchy().add(Utils.taskWithChildren(task, mppProject.getTasks()));
+                }
+            }
+        }
+
+        return mpp;
     }
 }

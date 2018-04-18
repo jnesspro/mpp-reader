@@ -1,17 +1,18 @@
-package pro.jness.mppreader.utils;
+package pro.jness.mppreader.utils.mpp;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.sf.mpxj.RelationType;
-import net.sf.mpxj.TimeUnit;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MPP {
     private ProjectProperties projectProperties;
+    private Integer tasksTotal;
     private List<Task> tasks;
+    private List<Task> tasksHierarchy;
 
     public ProjectProperties getProjectProperties() {
         return projectProperties;
@@ -19,6 +20,14 @@ public class MPP {
 
     public void setProjectProperties(ProjectProperties projectProperties) {
         this.projectProperties = projectProperties;
+    }
+
+    public Integer getTasksTotal() {
+        return tasksTotal;
+    }
+
+    public void setTasksTotal(Integer tasksTotal) {
+        this.tasksTotal = tasksTotal;
     }
 
     public List<Task> getTasks() {
@@ -29,6 +38,15 @@ public class MPP {
         this.tasks = tasks;
     }
 
+    public List<Task> getTasksHierarchy() {
+        return tasksHierarchy;
+    }
+
+    public void setTasksHierarchy(List<Task> tasksHierarchy) {
+        this.tasksHierarchy = tasksHierarchy;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ProjectProperties {
         private String author;
         private String lastAuthor;
@@ -43,9 +61,7 @@ public class MPP {
         private String currencyCode;
         private String defaultCalendarName;
         private String mpxProgramName;
-        @JsonProperty("AMText")
         private String amText;
-        @JsonProperty("PMText")
         private String pmText;
         private String category;
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -198,83 +214,4 @@ public class MPP {
         }
     }
 
-    public static class Task {
-        private Duration duration;
-        private List<Predecessor> predecessors;
-
-        public Duration getDuration() {
-            return duration;
-        }
-
-        public void setDuration(Duration duration) {
-            this.duration = duration;
-        }
-
-        public List<Predecessor> getPredecessors() {
-            return predecessors;
-        }
-
-        public void setPredecessors(List<Predecessor> predecessors) {
-            this.predecessors = predecessors;
-        }
-
-        public static class Duration {
-            private TimeUnit units;
-            private Double duration;
-
-            public Duration() {
-            }
-
-            public Duration(TimeUnit units, Double duration) {
-                this.units = units;
-                this.duration = duration;
-            }
-
-            public TimeUnit getUnits() {
-                return units;
-            }
-
-            public void setUnits(TimeUnit units) {
-                this.units = units;
-            }
-
-            public Double getDuration() {
-                return duration;
-            }
-
-            public void setDuration(Double duration) {
-                this.duration = duration;
-            }
-        }
-
-        public static class Predecessor {
-            private Integer targetTaskID;
-            private Integer sourceTaskID;
-            private RelationType relationType;
-
-            public Integer getTargetTaskID() {
-                return targetTaskID;
-            }
-
-            public void setTargetTaskID(Integer targetTaskID) {
-                this.targetTaskID = targetTaskID;
-            }
-
-            public Integer getSourceTaskID() {
-                return sourceTaskID;
-            }
-
-            public void setSourceTaskID(Integer sourceTaskID) {
-                this.sourceTaskID = sourceTaskID;
-            }
-
-            public RelationType getRelationType() {
-                return relationType;
-            }
-
-            public void setRelationType(RelationType relationType) {
-                this.relationType = relationType;
-            }
-        }
-    }
 }
