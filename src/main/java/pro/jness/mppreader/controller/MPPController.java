@@ -35,7 +35,7 @@ public class MPPController {
         this.mppReader = mppReader;
     }
 
-    @PostMapping("/describe-mpp-now")
+    @PostMapping({"/describe-mpp-now", "/api/v1/converter/mpp/file"})
     public MPP describeMppNow(@RequestParam("file") MultipartFile file,
                               @RequestParam(required = false, defaultValue = "true") Boolean includeProjectProperties,
                               @RequestParam(required = false, defaultValue = "true") Boolean includeTasks,
